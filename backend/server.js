@@ -77,7 +77,7 @@ app.get('/allproducts',async(req,res)=>{
 //Add products
 
 
-app.post('/addproduct',async(req,res)=>{
+app.post('/addproduct', upload.single("product"),async(req,res)=>{
     // let products= await Product.find({});
     // let id;
     // if (products.length>0){
@@ -91,16 +91,31 @@ app.post('/addproduct',async(req,res)=>{
     // }
     
 try{
+   // VALIDATION
+    if (!req.body.name || !req.body.category || !req.body.new_price || !req.body.old_price) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields"
+      });
+    }
+
+    // Ensure file exists
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Image is required"
+      });
+    
+    }
+
       const product = new Product({
 
         name:req.body.name,
-        image:req.body.image,
+        image:req.file.filename,
         category:req.body.category,
         new_price:req.body.new_price,
         old_price:req.body.old_price,
-
-
-});
+      })
 
     console.log(product)
     await product.save()

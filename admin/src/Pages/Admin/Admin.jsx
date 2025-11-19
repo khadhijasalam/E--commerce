@@ -13,6 +13,7 @@ const Admin = () => {
       <Routes>
         {/* //channg */}
         <Route path='/addproduct' element ={<AddProduct/>}/>
+        <Route path='/listproduct' element ={<ListProduct/>}/>
 
       </Routes>
     
