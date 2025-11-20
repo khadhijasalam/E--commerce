@@ -9,6 +9,7 @@ const cors= require("cors")
 const port= process.env.PORT || 4000
 
 const Product= require('./models/Product.js')
+const User= require('./models/User.js')
 
 const app= express()
 
@@ -67,8 +68,13 @@ console.log(`http://localhost:${port}/images/${req.file.filename}`)
 //Get all products
 app.get('/allproducts',async(req,res)=>{
     let products= await Product.find({})
-    console.log("all products")
+    console.log("all products!!!!")
+    console.log(products[0])
+
+    
+
     res.send(products)
+    
 
 })
 
@@ -168,7 +174,59 @@ app.post('/removeproduct', async (req, res) => {
 });
 
 
+//creating Endpoints
+app.post('/signup',async(req,res)=>{
+    let check = await User.findOne({email:req.body.email})
+    if (check){
+        return res.status(400).json({success:false,error:"User already exists with the same email"})
+    }
+    let cart={};
+    for( let i=0 ; i<300;i++){
+        cart[i]=0;
+    }
+    const user= new User({
+        name:req.body.username,
+        email:req.body.email,
+        password:req.body.password,
+        cartData:cart,
+    })
 
+    await user.save()
+
+    const data={
+        user:{
+            id:user.id
+        }
+    }
+    const token=jwt.sign(data,'secret_ecom')
+    res.json({success:true,token})
+
+})
+
+
+//Create endpoins for user login
+app.post('/login',async(req,res)=>{
+    let user=await User.findOne({email:req.body.email})
+    if (user){
+        const password=req.body.password
+        if(password===user.password){
+            const data ={
+                user:{
+                    id:user.id
+                }
+
+            }
+            const token=jwt.sign(data,'secret_ecom');
+            res.json({success:true,token})
+        }
+        else{
+            res.json({success:false,error:"Wrong Password"})
+        } } 
+        else{
+            res.json({success:false,error:"No account associated with this Email."})
+        }
+    
+})
 
 app.listen(port, ()=>{
     console.log(`listening on port ${port}`)
