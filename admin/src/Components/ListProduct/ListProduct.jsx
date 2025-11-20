@@ -51,12 +51,12 @@ const remove_product= async(id)=>{
 
   return  <><div key={idx} className="listproduct-format-main listproduct-format">
 
-    <img src={`http://localhost:4000/images/${product.image}`} alt="" className="listproduct-product-icon" />
+    <img src={`${product.image}`} alt="" className="listproduct-product-icon" />
     <p>{product.name}</p>
     <p>${product.old_price}</p>
     <p>${product.new_price}</p>
     <p>{product.category}</p>
-    <img onClick= {()=>{remove_product(product._id)}}className='listproduct-remove-icon' src={cross_icon}> 
+    <img onClick= {()=>{remove_product(product.id)}}className='listproduct-remove-icon' src={cross_icon}> 
     </img>
   </div>
   <hr/>
