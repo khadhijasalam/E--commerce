@@ -10,6 +10,7 @@ const port= process.env.PORT || 4000
 
 const Product= require('./models/Product.js')
 const User= require('./models/User.js')
+const fetchUser= require('./middleware/fetchUser')
 
 const app= express()
 
@@ -72,17 +73,6 @@ console.log(`http://localhost:${port}/images/${req.file.filename}`)
 })
 
 
-//Get all products
-// app.get('/allproducts',async(req,res)=>{
-//     let products= await Product.find({})
-//     console.log("all products!!!!")
-//     console.log(products[0])
-
-    
-
-//     res.send(products)
-    
-
 // })
 app.get('/allproducts', async (req, res) => {
   const products = await Product.find({});
@@ -101,18 +91,7 @@ app.get('/allproducts', async (req, res) => {
 
 
 app.post('/addproduct', upload.single("product"),async(req,res)=>{
-    // let products= await Product.find({});
-    // let id;
-    // if (products.length>0){
-    //     let last_product_array= products.slice(-1)
-    //     let last_product=last_product_array[0]
-    //     id=last_product.id+1
-
-
-    // }else{
-    //     id=1
-    // }
-    
+   
 try{
    // VALIDATION
     if (!req.body.name || !req.body.category || !req.body.new_price || !req.body.old_price) {
@@ -262,22 +241,7 @@ app.get('/popular-women',async(req,res)=>{
     res.send(formatted)
 
 })
-// Creating middleware to fetch user
-const fetchUser = async (req, res, next) => {
-    const token = req.header('auth-token');
-    if (!token) {
-        return res.status(401).send({ errors: "Please authenticate using valid token" });
-    }
-    else {
-        try {
-            const data = jwt.verify(token, 'secret_ecom');
-            req.user = data.user;
-            next();
-        } catch (error) {
-            res.status(401).send({ errors: "Please authenticate using valid token" });
-        }
-    }
-}
+
 
 
 //endpoint for adding products to cart
