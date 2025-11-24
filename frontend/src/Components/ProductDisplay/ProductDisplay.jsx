@@ -9,7 +9,9 @@ const ProductDisplay = (props) => {
   const { addToCart } = useContext(ShopContext);
     if (!product) {
     return <div>Loading...</div>;
+
   }
+  // console.log(product)
   return (
     <div className="productdisplay">
       <div className="productdisplay-left">
@@ -61,10 +63,11 @@ const ProductDisplay = (props) => {
             addToCart(product.id);
           }}
         >
+
           ADD TO CART
         </button>
         <p className="productdisplay-right-category">
-          <span>Category : </span> Women, T-Shirt, Crop Top
+          <span>Category : </span> {product.category}, T-Shirt
         </p>
         <p className="productdisplay-right-category">
           <span>Tags : </span> Modern, Latest

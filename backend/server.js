@@ -73,6 +73,59 @@ console.log(`http://localhost:${port}/images/${req.file.filename}`)
 })
 
 
+
+//creating Endpoints
+app.post('/signup',async(req,res)=>{
+    let check = await User.findOne({email:req.body.email})
+    if (check){
+        return res.status(400).json({success:false,error:"User already exists with the same email"})
+    }
+    let cart={};
+ 
+    const user= new User({
+        name:req.body.username,
+        email:req.body.email,
+        password:req.body.password,
+        cartData:cart,
+    })
+
+    await user.save()
+
+    const data={
+        user:{
+            id:user.id
+        }
+    }
+    const token=jwt.sign(data,'secret_ecom')
+    res.json({success:true,token})
+
+})
+
+
+//Create endpoins for user login
+app.post('/login',async(req,res)=>{
+    let user=await User.findOne({email:req.body.email})
+    if (user){
+        const password=req.body.password
+        if(password===user.password){
+            const data ={
+                user:{
+                    id:user.id
+                }
+
+            }
+            const token=jwt.sign(data,'secret_ecom');
+            res.json({success:true,token})
+        }
+        else{
+            res.json({success:false,error:"Wrong Password"})
+        } } 
+        else{
+            res.json({success:false,error:"No account associated with this Email."})
+        }
+    
+})
+
 // })
 app.get('/allproducts', async (req, res) => {
   const products = await Product.find({});
@@ -171,62 +224,11 @@ app.post('/removeproduct', async (req, res) => {
 });
 
 
-//creating Endpoints
-app.post('/signup',async(req,res)=>{
-    let check = await User.findOne({email:req.body.email})
-    if (check){
-        return res.status(400).json({success:false,error:"User already exists with the same email"})
-    }
-    let cart={};
- 
-    const user= new User({
-        name:req.body.username,
-        email:req.body.email,
-        password:req.body.password,
-        cartData:cart,
-    })
-
-    await user.save()
-
-    const data={
-        user:{
-            id:user.id
-        }
-    }
-    const token=jwt.sign(data,'secret_ecom')
-    res.json({success:true,token})
-
-})
-
-
-//Create endpoins for user login
-app.post('/login',async(req,res)=>{
-    let user=await User.findOne({email:req.body.email})
-    if (user){
-        const password=req.body.password
-        if(password===user.password){
-            const data ={
-                user:{
-                    id:user.id
-                }
-
-            }
-            const token=jwt.sign(data,'secret_ecom');
-            res.json({success:true,token})
-        }
-        else{
-            res.json({success:false,error:"Wrong Password"})
-        } } 
-        else{
-            res.json({success:false,error:"No account associated with this Email."})
-        }
-    
-})
 
 //creating endpoint for new collection
 app.get('/newcollections',async(req,res)=>{
     let products= await Product.find({});
-    let newcollections = products.slice(1).slice(-8)
+    let newcollections = products.slice(-8)
     const formatted = newcollections.map(p => formatProduct(p, port));
     console.log("New collections fetched")
     res.send(formatted)
@@ -241,6 +243,18 @@ app.get('/popular-women',async(req,res)=>{
     res.send(formatted)
 
 })
+app.get('/related-products', async (req, res) => {
+  const category = req.query.category;
+
+  let products = await Product.find({ category });
+  let relatedProducts = products.slice(0, 4);
+  const formatted = relatedProducts.map(p => formatProduct(p, port));
+
+  console.log(`Related products for ${category}`);
+  res.send(formatted);
+});
+
+
 
 
 

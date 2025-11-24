@@ -1,15 +1,28 @@
-import React from "react";
+import {useState, useEffect} from "react";
 import "./RelatedProducts.css";
-import data_product from "../Assets/data";
+// import data_product from "../Assets/data";
 import Item from "../Item/Item";
 
-const RelatedProducts = () => {
+const RelatedProducts = (props) => {
+  const [related, setRelated] = useState([])
+  const {product}=props;
+useEffect(() => {
+  const category = product?.category || "women"; 
+  
+  fetch(`http://localhost:4000/related-products?category=${category}`)
+    .then(res => res.json())
+    .then(data => setRelated(data));
+}, [product]);
+
+// console.log(product?.category)
+
+
   return (
     <div className="relatedproducts">
       <h1>Related Products</h1>
       <hr />
       <div className="relatedproducts-item">
-        {data_product.map((item, i) => {
+        {related.map((item, i) => {
           return (
             <Item
               key={i}
