@@ -7,7 +7,7 @@ const ListProduct = () => {
   const [allProducts, setAllProducts]=useState([])
 
 const fetchInfo=()=>{
-   fetch('http://localhost:4000/allproducts')
+   fetch('http://localhost:4000/api/products')
   .then((res)=>res.json())
   .then((data)=>{setAllProducts(data)})
 }
@@ -18,16 +18,13 @@ useEffect(()=>{
 },[])
 
 const remove_product= async(id)=>{
-  console.log('Clicked',id)
-  await fetch('http://localhost:4000/removeproduct',{
-    method:'POST',
-    headers:{
-      Accept:'application/json',
-      'Content-Type':'application/json',
-    },
-    body:JSON.stringify({id:id})
+  console.log('Deleted',id)
+  await fetch(`http://localhost:4000/api/products/${id}`,{
+    method:'DELETE',
+    
   })
-  await fetchInfo()
+ setAllProducts(prev => prev.filter(p => p.id !== id));
+
 
 }
 
@@ -49,18 +46,22 @@ const remove_product= async(id)=>{
 
 {allProducts.map((product,idx)=>{
 
-  return  <><div key={idx} className="listproduct-format-main listproduct-format">
-
-    <img src={`${product.image}`} alt="" className="listproduct-product-icon" />
-    <p>{product.name}</p>
-    <p>${product.old_price}</p>
-    <p>${product.new_price}</p>
-    <p>{product.category}</p>
-    <img onClick= {()=>{remove_product(product.id)}}className='listproduct-remove-icon' src={cross_icon}> 
-    </img>
+  return   <div key={product.id}>
+    <div className="listproduct-format-main listproduct-format">
+      <img src={product.image} alt="" className="listproduct-product-icon" />
+      <p>{product.name}</p>
+      <p>${product.old_price}</p>
+      <p>${product.new_price}</p>
+      <p>{product.category}</p>
+      <img
+        onClick={() => remove_product(product.id)}
+        className="listproduct-remove-icon"
+        src={cross_icon}
+        alt="delete"
+      />
+    </div>
+    <hr />
   </div>
-  <hr/>
- </>
 
 
 })}

@@ -31,12 +31,6 @@ const formatProduct = (p, port) => ({
 
 
 
-//APIs
-app.get("/",(req,res)=>{
-    res.send("hello")
-})
-
-
 
 //connect to mongodb
 mongoose.connect(process.env.MONGO_URI)
@@ -62,7 +56,7 @@ const upload= multer({storage:storage})
 app.use('/images',express.static('upload/images'))
 
 //create upload endpoint for images
-app.post("/upload", upload.single('product'),(req,res)=>{
+app.post("/api/upload", upload.single('product'),(req,res)=>{
 res.json({
 success:1,
 image_url:`http://localhost:${port}/images/${req.file.filename}`
@@ -75,7 +69,7 @@ console.log(`http://localhost:${port}/images/${req.file.filename}`)
 
 
 //creating Endpoints
-app.post('/signup',async(req,res)=>{
+app.post('/api/users',async(req,res)=>{
     let check = await User.findOne({email:req.body.email})
     if (check){
         return res.status(400).json({success:false,error:"User already exists with the same email"})
@@ -103,7 +97,7 @@ app.post('/signup',async(req,res)=>{
 
 
 //Create endpoins for user login
-app.post('/login',async(req,res)=>{
+app.post('/api/auth/login',async(req,res)=>{
     let user=await User.findOne({email:req.body.email})
     if (user){
         const password=req.body.password
@@ -127,7 +121,7 @@ app.post('/login',async(req,res)=>{
 })
 
 // })
-app.get('/allproducts', async (req, res) => {
+app.get('/api/products', async (req, res) => {
   const products = await Product.find({});
   
  const formatted = products.map(p => formatProduct(p, port));
@@ -143,7 +137,7 @@ app.get('/allproducts', async (req, res) => {
 //Add products
 
 
-app.post('/addproduct', upload.single("product"),async(req,res)=>{
+app.post('/api/products', upload.single("product"),async(req,res)=>{
    
 try{
    // VALIDATION
@@ -192,17 +186,19 @@ try{
 
 
 //Delete products
-app.post('/removeproduct', async (req, res) => {
+app.delete('/api/products/:id', async (req, res) => {
     try {
         // console.log("BODY RECEIVED:", req.body);
-        const mongoId = req.body.id;  // frontend sends "id"
+        const mongoId = req.params.id  // frontend sends "id"
 
-        if (!mongoId) {
-            return res.json({
-                success: false,
-                message: "No id provided"
-            });
-        }
+        if (!mongoose.Types.ObjectId.isValid(mongoId)) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid product ID"
+  });
+}
+
+        
 
         const deletedProduct = await Product.findByIdAndDelete(mongoId);
 
@@ -226,28 +222,32 @@ app.post('/removeproduct', async (req, res) => {
 
 
 //creating endpoint for new collection
-app.get('/newcollections',async(req,res)=>{
-    let products= await Product.find({});
-    let newcollections = products.slice(-8)
+app.get('/api/products/new',async(req,res)=>{
+    
+    let newcollections = await Product.find({  })
+     .sort({ _id: -1 }) 
+  .limit(8);
     const formatted = newcollections.map(p => formatProduct(p, port));
     console.log("New collections fetched")
     res.send(formatted)
 })
 
-app.get('/popular-women',async(req,res)=>{
-    let products= await Product.find({category:"women"});
-    let popularWomen=products.slice(0,4);
-        const formatted = popularWomen.map(p => formatProduct(p, port));
+app.get('/api/products/popular',async(req,res)=>{
+    const category=req.query.category || "women"
+    let popular=  await Product.find({ category })
+  .limit(4);
+
+        const formatted = popular.map(p => formatProduct(p, port));
 
     console.log('Popular in women fetched')
     res.send(formatted)
 
 })
-app.get('/related-products', async (req, res) => {
+app.get('/api/products/related', async (req, res) => {
   const category = req.query.category;
 
-  let products = await Product.find({ category });
-  let relatedProducts = products.slice(0, 4);
+  let relatedProducts = await Product.find({ category })
+  .limit(4);
   const formatted = relatedProducts.map(p => formatProduct(p, port));
 
   console.log(`Related products for ${category}`);
@@ -256,13 +256,22 @@ app.get('/related-products', async (req, res) => {
 
 
 
+// endpoint to get cartdata
+app.get('/api/cart',fetchUser,async(req,res)=>{
+    console.log("GetCart")
+    const userId = req.user.id;
+
+    let userData = await User.findOne({_id:userId})
+    res.json(userData?.cartData||{})
+})
+
 
 
 //endpoint for adding products to cart
-app.post('/addtocart', fetchUser, async (req, res) => {
+app.put('/api/cart/:itemId', fetchUser, async (req, res) => {
     try {
         const userId = req.user.id;
-        const itemId = req.body.itemId;
+        const itemId = req.params.itemId
 
         let user = await User.findById(userId);
         let cart = user.cartData;
@@ -289,10 +298,10 @@ app.post('/addtocart', fetchUser, async (req, res) => {
     }
 });
 
-app.post('/removefromcart', fetchUser, async (req, res) => {
+app.delete('/api/cart/:itemId', fetchUser, async (req, res) => {
     try {
         const userId = req.user.id;
-        const itemId = req.body.itemId;
+        const itemId = req.params.itemId;
 
         let user = await User.findById(userId);
 
@@ -316,15 +325,6 @@ app.post('/removefromcart', fetchUser, async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
-
-//create endpoint to get cartdata
-app.post('/getcart',fetchUser,async(req,res)=>{
-    console.log("GetCart")
-    const userId = req.user.id;
-
-    let userData = await User.findOne({_id:userId})
-    res.json(userData.cartData)
-})
 
 app.listen(port, ()=>{
     console.log(`listening on port ${port}`)

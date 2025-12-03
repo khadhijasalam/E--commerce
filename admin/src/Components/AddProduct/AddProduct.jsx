@@ -20,55 +20,7 @@ const changeHandler=(e)=>{
     setProductDetails({...productDetails,[e.target.name]:e.target.value})
 }
 
-// const Add_Product= async()=>{
-//     try{
-//     console.log(productDetails)
-//     let responseData;
-//     let product  =  productDetails;;
-
-//     let formData = new FormData()
-//     formData.append('product',image);
-
-//     const uploadRes= await fetch('http://localhost:4000/upload',{
-//         method: 'POST',
-//         headers:{
-//             Accept:'application/json',
-//         },
-//         body:formData,
-//     })
-//      responseData = await uploadRes.json();
-    
-// if(responseData.success){
-//     product.image=responseData.image_url;
-//     console.log(product)
-//     //change
-//     //Note: the picture gets stored in he folder, but doest get updated in db because of error
-//     //change to option 3
-//    const addRes= await fetch('http://localhost:4000/addproduct',{
-//         method:'POST',
-//         headers:{
-
-//             Accept:'application/json',
-//             'Content-Type':'application/json'
-//         },
-//         body: JSON.stringify(product),
-//         })
-        
-//     const addData = await addRes.json();
-     
-// addData.success?alert("product Added"):alert("Failed")
-
-
-//         }}
-
-//         catch (error) {
-//     console.error(error);
-//     alert("Error occurred");
-//   }
-// }
-
-
-const Add_Product = async () => {
+const handleAddProduct = async () => {
   try {
     const formData = new FormData();
 
@@ -81,7 +33,7 @@ const Add_Product = async () => {
     formData.append("new_price", productDetails.new_price);
     formData.append("old_price", productDetails.old_price);
 
-    const res = await fetch("http://localhost:4000/addproduct", {
+    const res = await fetch("http://localhost:4000/api/products", {
       method: "POST",
       body: formData,      //  NO HEADERS NEEDED
     });
@@ -138,7 +90,7 @@ const Add_Product = async () => {
             <input onChange={imageHandler} type="file" name="image"  id="file-input" hidden />
             </div> 
             
-                        <button onClick={()=>{Add_Product()}} className='addproduct-btn' >ADD</button>
+                        <button onClick={()=>{handleAddProduct()}} className='addproduct-btn' >ADD</button>
 
             </div>
             </>

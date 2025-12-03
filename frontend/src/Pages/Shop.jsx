@@ -9,7 +9,7 @@ const Shop = () => {
   return (
     <div>
       <Hero />
-      <Popular />
+      <Popular category="women" />
       <Offer />
       <NewCollections />
       <Newsletter />

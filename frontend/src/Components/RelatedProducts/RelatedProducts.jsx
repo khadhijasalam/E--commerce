@@ -9,7 +9,7 @@ const RelatedProducts = (props) => {
 useEffect(() => {
   const category = product?.category || "women"; 
   
-  fetch(`http://localhost:4000/related-products?category=${category}`)
+  fetch(`http://localhost:4000/api/products/related?category=${category}`)
     .then(res => res.json())
     .then(data => setRelated(data));
 }, [product]);

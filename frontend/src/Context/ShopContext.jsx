@@ -13,18 +13,17 @@ const ShopContextProvider = (props) => {
   const [all_product,setAll_Product]=useState([])
 
   useEffect(()=>{
-    fetch('http://localhost:4000/allproducts')
+    fetch('http://localhost:4000/api/products')
     .then((res)=>res.json())
     .then((data)=>setAll_Product(data))
 
     if(localStorage.getItem('auth-token')){
-      fetch('http://localhost:4000/getcart',{
-        method:'POST',
+      fetch('http://localhost:4000/api/cart',{
+        method:'GET',
         headers:{
-          Accept:'application/form-data',
           'auth-token':`${localStorage.getItem('auth-token')}`,
-          'Content-Type':'application/json'
-        },body:"",
+          
+        }
       }).then((res)=>res.json())
       .then((data)=>setCartItems(data))
 
@@ -38,15 +37,16 @@ const addToCart = (itemId) => {
     ...prev,
     [itemId]: (prev[itemId] || 0) + 1,
   }));
+
  if(localStorage.getItem('auth-token')){
-    fetch('http://localhost:4000/addtocart',{
-        method:'POST',
+    fetch(`http://localhost:4000/api/cart/${itemId}`,{
+        method:'PUT',
         headers:{
-            Accept:'application/form-data',
+          
             'auth-token': `${localStorage.getItem('auth-token')}`,
-            'Content-Type':'application/json'
+           
         },
-        body: JSON.stringify({"itemId":itemId}),
+       
     })
     .then((response)=>response.json())
     .then((data)=>console.log(data))
@@ -55,19 +55,26 @@ const addToCart = (itemId) => {
 
 };
 const removeFromCart = (itemId) => {
-  setCartItems((prev) => ({
-    ...prev,
-    [itemId]: (prev[itemId] || 0) - 1,
-  }));
+ setCartItems(prev => {
+  if (!prev[itemId]) return prev;
+
+  const updated = { ...prev };
+  if (updated[itemId] > 1) {
+    updated[itemId] -= 1;
+  } else {
+    delete updated[itemId];
+  }
+  return updated;
+});
    if(localStorage.getItem('auth-token')){
-    fetch('http://localhost:4000/removefromcart',{
-        method:'POST',
+    fetch(`http://localhost:4000/api/cart/${itemId}`,{
+        method:'DELETE',
         headers:{
-            Accept:'application/form-data',
+         
             'auth-token': `${localStorage.getItem('auth-token')}`,
-            'Content-Type':'application/json'
+            
         },
-        body: JSON.stringify({"itemId":itemId}),
+        
     })
     .then((response)=>response.json())
     .then((data)=>console.log(data))
@@ -78,7 +85,7 @@ const getTotalCartAmount = () => {
   let totalAmount = 0;
   for (const itemId in cartItems) {
     if (cartItems[itemId] > 0) {
-      let itemInfo = all_product.find((p) => p._id === itemId);
+      let itemInfo = all_product.find((p) => p.id === itemId);
       if (itemInfo) {
         totalAmount += itemInfo.new_price * cartItems[itemId];
       }

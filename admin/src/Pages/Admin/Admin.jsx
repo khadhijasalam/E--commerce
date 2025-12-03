@@ -12,8 +12,8 @@ const Admin = () => {
       <Sidebar/>
       <Routes>
         {/* //channg */}
-        <Route path='/addproduct' element ={<AddProduct/>}/>
-        <Route path='/listproduct' element ={<ListProduct/>}/>
+        <Route path='/admin/addproducts' element ={<AddProduct/>}/>
+        <Route path='/admin/listproduct' element ={<ListProduct/>}/>
 
       </Routes>
     
