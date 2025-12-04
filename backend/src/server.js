@@ -86,7 +86,7 @@ app.use("/images", express.static(path.join(__dirname, "../upload/images")));
 // API routes
 app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/productRoutes"));
-// app.use("/api", require("./routes/cartRoutes"));
+app.use("/api", require("./routes/cartRoutes"));
 
 
 
@@ -95,74 +95,74 @@ app.use("/api", require("./routes/productRoutes"));
 
 
 // endpoint to get cartdata
-app.get('/api/cart',fetchUser,async(req,res)=>{
-    console.log("GetCart")
-    const userId = req.user.id;
+// app.get('/api/cart',fetchUser,async(req,res)=>{
+//     console.log("GetCart")
+//     const userId = req.user.id;
 
-    let userData = await User.findOne({_id:userId})
-    res.json(userData?.cartData||{})
-})
+//     let userData = await User.findOne({_id:userId})
+//     res.json(userData?.cartData||{})
+// })
 
 
 
-//endpoint for adding products to cart
-app.put('/api/cart/:itemId', fetchUser, async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const itemId = req.params.itemId
+// //endpoint for adding products to cart
+// app.put('/api/cart/:itemId', fetchUser, async (req, res) => {
+//     try {
+//         const userId = req.user.id;
+//         const itemId = req.params.itemId
 
-        let user = await User.findById(userId);
-        let cart = user.cartData;
+//         let user = await User.findById(userId);
+//         let cart = user.cartData;
 
-          if (!cart || typeof cart !== "object") {
-            cart = {};
-        }
-        // If product already in cart, increase quantity
-        if (cart[itemId]) {
-            cart[itemId] += 1;
-        } else {
-            // Otherwise add it with quantity 1
-            cart[itemId] = 1;
-        }
-        // Save updated cart
-        await User.findByIdAndUpdate(userId, { cartData: cart });
+//           if (!cart || typeof cart !== "object") {
+//             cart = {};
+//         }
+//         // If product already in cart, increase quantity
+//         if (cart[itemId]) {
+//             cart[itemId] += 1;
+//         } else {
+//             // Otherwise add it with quantity 1
+//             cart[itemId] = 1;
+//         }
+//         // Save updated cart
+//         await User.findByIdAndUpdate(userId, { cartData: cart });
 
-        res.json({
-            success: true,
-            cartData: cart
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
+//         res.json({
+//             success: true,
+//             cartData: cart
+//         });
+//     } catch (error) {
+//         res.status(500).json({ success: false, error: error.message });
+//     }
+// });
 
-app.delete('/api/cart/:itemId', fetchUser, async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const itemId = req.params.itemId;
+// app.delete('/api/cart/:itemId', fetchUser, async (req, res) => {
+//     try {
+//         const userId = req.user.id;
+//         const itemId = req.params.itemId;
 
-        let user = await User.findById(userId);
+//         let user = await User.findById(userId);
 
-        let cart = user.cartData;
-        if (!cart || typeof cart !== "object") {
-            return res.json({ success: false, error: "Cart is empty" });
-        }
-        // Decrease quantity
-        if (cart[itemId] > 1) {
-            cart[itemId] -= 1;
-         }else {
-            delete cart[itemId]; // REMOVE key from backend completely
-        }
+//         let cart = user.cartData;
+//         if (!cart || typeof cart !== "object") {
+//             return res.json({ success: false, error: "Cart is empty" });
+//         }
+//         // Decrease quantity
+//         if (cart[itemId] > 1) {
+//             cart[itemId] -= 1;
+//          }else {
+//             delete cart[itemId]; // REMOVE key from backend completely
+//         }
 
-        // Update the database
-        await User.findByIdAndUpdate(userId, { cartData: cart });
+//         // Update the database
+//         await User.findByIdAndUpdate(userId, { cartData: cart });
 
-        res.json({ success: true, cartData: cart });
+//         res.json({ success: true, cartData: cart });
 
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
+//     } catch (error) {
+//         res.status(500).json({ success: false, error: error.message });
+//     }
+// });
 
 
 // GLOBAL ERROR HANDLER (for asyncHandler)
