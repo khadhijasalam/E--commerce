@@ -32,7 +32,7 @@ exports.signup = asyncHandler(async (req, res) => {
             }
   const token = jwt.sign(
     data,
-    "secret_ecom"
+    process.env.JWT_SECRET
   );
 
   return res.json({ success: true, token });
@@ -65,7 +65,7 @@ exports.login = asyncHandler(async (req, res) => {
                 }
 
             }
-            const token=jwt.sign(data,'secret_ecom');
+            const token=jwt.sign(data,process.env.MONGO_URI);
 
   return res.json({ success: true, token });
 });
