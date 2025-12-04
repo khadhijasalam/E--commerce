@@ -7,6 +7,7 @@ const formatProduct = (p, port) => ({
   old_price: p.old_price,
  image: `${process.env.HOST_URL || `http://localhost:${port}`}/images/${p.image}`
 
-});
+}
+);
 
 module.exports= formatProduct

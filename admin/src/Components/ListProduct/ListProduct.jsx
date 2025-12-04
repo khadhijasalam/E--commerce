@@ -2,12 +2,13 @@ import React from 'react'
 import './ListProduct.css'
 import {useState,useEffect} from 'react'
 import cross_icon from '../../assets/cross_icon.png'
+import { API_URL } from "../../config/api";
 const ListProduct = () => {
 
   const [allProducts, setAllProducts]=useState([])
 
 const fetchInfo=()=>{
-   fetch('http://localhost:4000/api/products')
+   fetch(`${API_URL}/products`)
   .then((res)=>res.json())
   .then((data)=>{setAllProducts(data)})
 }
@@ -19,7 +20,7 @@ useEffect(()=>{
 
 const remove_product= async(id)=>{
   console.log('Deleted',id)
-  await fetch(`http://localhost:4000/api/products/${id}`,{
+  await fetch(`${API_URL}/products/${id}`,{
     method:'DELETE',
     
   })

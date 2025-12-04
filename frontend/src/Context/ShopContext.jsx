@@ -1,6 +1,6 @@
 import { createContext, useState,useEffect } from "react";
 // import all_product from "../Components/Assets/all_product";
-
+import { API_URL } from "../config/api";
 export const ShopContext = createContext(null);
 
 const getDefaultCart = () => {
@@ -13,12 +13,12 @@ const ShopContextProvider = (props) => {
   const [all_product,setAll_Product]=useState([])
 
   useEffect(()=>{
-    fetch('http://localhost:4000/api/products')
+    fetch(`${API_URL}/products`)
     .then((res)=>res.json())
     .then((data)=>setAll_Product(data))
 
     if(localStorage.getItem('auth-token')){
-      fetch('http://localhost:4000/api/cart',{
+      fetch(`${API_URL}/cart`,{
         method:'GET',
         headers:{
           'auth-token':`${localStorage.getItem('auth-token')}`,
@@ -39,7 +39,7 @@ const addToCart = (itemId) => {
   }));
 
  if(localStorage.getItem('auth-token')){
-    fetch(`http://localhost:4000/api/cart/${itemId}`,{
+    fetch(`${API_URL}/cart/${itemId}`,{
         method:'PUT',
         headers:{
           
@@ -67,7 +67,7 @@ const removeFromCart = (itemId) => {
   return updated;
 });
    if(localStorage.getItem('auth-token')){
-    fetch(`http://localhost:4000/api/cart/${itemId}`,{
+    fetch(`${API_URL}/cart/${itemId}`,{
         method:'DELETE',
         headers:{
          

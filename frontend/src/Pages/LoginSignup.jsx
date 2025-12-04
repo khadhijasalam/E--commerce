@@ -1,5 +1,6 @@
 import {useState} from "react";
 import "./CSS/LoginSignup.css";
+import { API_URL } from "../config/api";
 
 
 const LoginSignup = () => {
@@ -17,7 +18,7 @@ const LoginSignup = () => {
   const Login=async()=>{
     console.log("Login func executed")
      
-    const res= await fetch('http://localhost:4000/api/auth/login',{
+    const res= await fetch(`${API_URL}/auth/logi`,{
       method:'POST',
       headers:{
         Accept:'application/form-data',
@@ -41,7 +42,7 @@ const LoginSignup = () => {
   const Signup=async()=>{
     console.log("Signup func executed")
     
-    const res= await fetch('http://localhost:4000/api/users',{
+    const res= await fetch(`${API_URL}/users`,{
       method:'POST',
       headers:{
         Accept:'application/form-data',

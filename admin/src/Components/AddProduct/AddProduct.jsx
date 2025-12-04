@@ -1,6 +1,7 @@
 import './AddProduct.css'
 import {useState} from 'react'
 import upload_area from '../../assets/upload_area.svg'
+import { API_URL } from "../../config/api";
 const AddProduct   = () => {
     const [image,setImage]=useState(false);
     const [productDetails,setProductDetails]= useState({
@@ -33,7 +34,7 @@ const handleAddProduct = async () => {
     formData.append("new_price", productDetails.new_price);
     formData.append("old_price", productDetails.old_price);
 
-    const res = await fetch("http://localhost:4000/api/products", {
+    const res = await fetch(`${API_URL}/products`, {
       method: "POST",
       body: formData,      //  NO HEADERS NEEDED
     });

@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 4000;
 exports.getAll = asyncHandler(async (req, res) => {
   const products = await Product.find({});
   const formatted = products.map(p => formatProduct(p, PORT));
+  // console.log(formatted[0])
   return res.json(formatted);
 });
 
