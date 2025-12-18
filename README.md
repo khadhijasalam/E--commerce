@@ -1,116 +1,98 @@
-A full-[stack E-Commerce web application built using the MERN stack with a React (Vite) frontend, JWT authentication, a dedicated admin dashboard, and complete cart functionality.
+# 🛒 MERN Stack E-Commerce Application
 
-🚀 Live Demo
+A full-stack **E-Commerce web application** built using the **MERN stack** with a **React (Vite) frontend**, **JWT authentication**, a **dedicated admin dashboard**, and **complete cart functionality**.
 
-Frontend: https://e-commerce.vercel.app](https://e-commerce-six-tan.vercel.app/)
+---
 
-Admin Dashboard:[ https://e-commerce-admin.vercel.app/admin](https://e-commerce-admin-sandy-theta.vercel.app/admin/listproduct)
+## 🚀 Live Demo
 
+- **Frontend:** https://e-commerce-six-tan.vercel.app/
+- **Admin Dashboard:** https://e-commerce-admin-sandy-theta.vercel.app/admin/listproduct
 
+---
 
-🧰 Tech Stack
-Frontend
+## 🧰 Tech Stack
 
-React (Vite)
+### Frontend
+- React (Vite)
+- React Router
+- Context API
+- Axios
+- CSS
 
-React Router
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- JWT Authentication
+- Multer (Image Uploads)
 
-Context API
+### Deployment
+- Frontend & Admin: **Vercel**
+- Backend: **Render**
+- Database: **MongoDB Atlas**
 
-Axios
+---
 
-CSS
+## ✨ Features
 
-Backend
+### 🔐 Authentication
+- JWT-based authentication
+- Secure login & signup
+- Protected routes for users and admin
 
-Node.js
+---
 
-Express.js
+### 🏬 Product Categories
+- Shop (All Products)
+- Men
+- Women
+- Kids
 
-MongoDB
+---
 
-JWT Authentication
+### 🖼️ Product Details Page
+- Click any product to view:
+  - Product image
+  - Price & description
+  - Category
+- Displays **related products** below, fetched from the backend
 
-Multer (Image Uploads)
+---
 
-Deployment
+### 🛒 Cart System
+- Add products to cart
+- Remove products
+- Update product quantity
+- Auto-calculated **total price**
 
-Frontend & Admin: Vercel
+---
 
-Backend: Render
+### 🧑‍💼 Admin Dashboard
+- Separate admin interface
+- Admin can:
+  - Add new clothing products
+  - Upload product images
+  - Delete products
+- Admin routes protected with JWT
 
-Database: MongoDB Atlas
+---
 
-✨ Features
-🔐 Authentication
+## 📁 Project Structure
 
-JWT-based authentication
+The project is divided into **three main parts**:
 
-Secure login & signup
+- `frontend` → User-facing e-commerce store  
+- `admin` → Admin dashboard for product management  
+- `backend` → REST API & database logic  
 
-Protected routes for users and admin
-
-🏬 Product Categories
-
-Shop (All Products)
-
-Men
-
-Women
-
-Kids
-
-🖼️ Product Details Page
-
-Click any product to view:
-
-Product image
-
-Price & description
-
-Category
-
-Displays related products below, fetched from the backend
-
-🛒 Cart System
-
-Add products to cart
-
-Remove products
-
-Update product quantity
-
-Auto-calculated total price
-
-🧑‍💼 Admin Dashboard
-
-Separate admin interface
-
-Admin can:
-
-Add new clothing products
-
-Upload product images
-
-Delete products
-
-Admin routes protected with JWT
-
-📁 Project Structure
-
-The project is divided into three main parts:
-
-frontend → User-facing e-commerce store
-
-admin → Admin dashboard for product management
-
-backend → REST API & database logic
+```text
 E-commerce-Site
 │
 ├── admin                     # Admin Dashboard (React + Vite)
 │   ├── public
 │   ├── src
-│   │   ├── assets             # Admin images & icons
+│   │   ├── assets
 │   │   ├── components
 │   │   │   ├── AddProduct
 │   │   │   ├── ListProduct
@@ -153,27 +135,14 @@ E-commerce-Site
 │   │   ├── data.js
 │   │   └── seed.js
 │   ├── upload
-│   │   └── images             # Uploaded product images
+│   │   └── images
 │   └── package.json
 │
 ├── frontend                  # User-facing Store (React + Vite)
 │   ├── public
 │   ├── src
-│   │   ├── assets             # Static images & icons
+│   │   ├── assets
 │   │   ├── components
-│   │   │   ├── Breadcrums
-│   │   │   ├── CartItems
-│   │   │   ├── DescriptionBox
-│   │   │   ├── Footer
-│   │   │   ├── Hero
-│   │   │   ├── Item
-│   │   │   ├── Navbar
-│   │   │   ├── NewCollections
-│   │   │   ├── Newsletter
-│   │   │   ├── Offer
-│   │   │   ├── Popular
-│   │   │   ├── ProductDisplay
-│   │   │   └── RelatedProducts
 │   │   ├── context
 │   │   │   └── ShopContext.jsx
 │   │   ├── config
@@ -194,35 +163,38 @@ E-commerce-Site
 └── README.md
 
 
-⚙️ Installation & Setup
-1️⃣ Clone Repository
-git clone https://github.com/your-username/e-commerce-site.git
-cd E-commerce-Site
+## ⚙️ Installation & Setup
 
-2️⃣ Backend Setup
+### 1️⃣ Clone Repository
+```bash
+git clone https://github.com/khadhijasalam/E--commerce.git
+cd E-commerce-Site
+###2️⃣ Backend Setup
+```bash
+
 cd backend
 npm install
 npm run dev
+###Create a .env file in the backend directory:
 
-
-Create .env file:
+```env
 
 PORT=5000
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_secret_key
-
-3️⃣ Frontend Setup
+###3️⃣ Frontend Setup
+```bash
+Copy code
 cd frontend
 npm install
 npm run dev
+###4️⃣ Admin Setup
+```bash
 
-4️⃣ Admin Setup
 cd admin
 npm install
 npm run dev
-
 🔒 Security
-
 JWT authentication
 
 Protected API routes
@@ -230,7 +202,6 @@ Protected API routes
 Role-based admin access
 
 📌 Future Enhancements
-
 Payment gateway integration
 
 Order history
@@ -240,8 +211,3 @@ Wishlist feature
 Product reviews & ratings
 
 Cloudinary image hosting
-
-👨‍💻 Author
-
-Your Name
-GitHub: https://github.com/your-usernamel.app/)
